@@ -5,6 +5,11 @@ module.exports = {
 ],
   theme: {
     extend: {
+      color:{
+        'bgbase': '#001140',
+        'green': "#00CB14", 
+        'red': "#DC3434",
+      }
       
     },
   },

@@ -1,21 +1,33 @@
-import {createBrowserRouter} from 'react-router-dom';
-import App from '../App'
-
-import Home from '../components/home';
-import Lab01 from '../contentLabs/Lab01/Lab01';
-import Lab02 from '../contentLabs/Lab02/Lab02';
-import Lab03 from '../contentLabs/Lab03_Seasons/Lab03';
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App";
+import Home from "../components/home";
+import SignIn from "../components/signIn/signIn";
+import SignUp from "../components/signUp/signUp";
+import Board from "../components/board/board";
+import OverView from "../components/overview/overView";
+import Today from "../components/today/today";
+import Week from "../components/week/week";
+import Month from "../components/month/month";
 
 export const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App/>,
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      { path: "", element: <Home /> },
+      { path: "signIn", element: <SignIn /> },
+      { path: "signUp", element: <SignUp/> },
+      {
+        path: "board",
+        element: <Board />,
         children: [
-            {path: "", element: <Home/> },
-            {path: "lab01", element: <Lab01/> },
-            {path: "lab02", element: <Lab02/> },
-            {path: "lab03", element: <Lab03/> },
-         
-        ]
-    }
-])
+          { path: "", element: <OverView/> },
+          { path: "overview", element: <OverView/> },
+          { path: "today", element: <Today /> },
+          { path: "week", element: <Week /> },
+          { path: "month", element: <Month /> },
+        ],
+      },
+    ],
+  },
+]);

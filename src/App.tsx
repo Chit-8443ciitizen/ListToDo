@@ -1,18 +1,17 @@
 
 
 import './App.css';
-import Dashboard from './components/dashboard';
-import Nav from './components/nav';
+
+import { Outlet } from "react-router"
 
 function App() { 
   
   return (
     <>
     
-      <div className='flex '>
-
-        <Dashboard/>
-        <Nav/>
+      <div className='flex  justify-center h-full '>
+      <Outlet/>
+        
       </div>
       
     </>
