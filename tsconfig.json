@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "types": ["react","react-dom","react-hook-form"],
     "lib": [
       "dom",
       "dom.iterable",
