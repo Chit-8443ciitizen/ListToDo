@@ -14,8 +14,10 @@ import CreateTask from "../../shares/task_modal/createTask";
 import moment from "moment";
 
 
+
 const startDayWeekFormat = moment().startOf('week').add(1, 'days').format("DD-MM-YYYY");
 const endDayWeekFormat = moment().endOf('week').add(1,'days').format("DD-MM-YYYY");
+
 const Week = () => {
 
   const [taskArray, setTaskArray] = useState<Task[]>([]);
@@ -25,7 +27,8 @@ const Week = () => {
   useEffect(() => {
     fetchData();
   }); // ,[]
-
+  // const uid = getIdCurrentUser();
+  // console.log(cachedUserId);
   const fetchData = async () => {
     try {
       const tasks: Task[] = displayDeleted ? await getAllTask() : await getAllTaskNotNull(); // getAllTask
@@ -208,6 +211,7 @@ const Week = () => {
                     task_deadline={task.task_deadline}
                     task_priority={task.task_priority}
                     time = {{time: startDayWeekFormat}}
+                    task_uid=""
                   />
                 </div>
               </div>

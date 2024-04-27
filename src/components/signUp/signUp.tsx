@@ -2,8 +2,8 @@ import toast from "react-hot-toast";
 import "./signUp.css";
 import { useForm } from "react-hook-form";
 import  '../../.env'
-import FecthCity from "../fetchApi/fecthCity";
-import { createUser, saveUser } from "../../func-task-user/userFunction";
+import FecthCity from "../../prepairData/fecthCity";
+import { CreateUser, saveUser } from "../../func-task-user/userFunction";
 
 const signUpImg =
   "https://cdni.iconscout.com/illustration/free/thumb/free-task-list-2080780-1753768.png";
@@ -60,7 +60,7 @@ const SignUp = () => {
         city: data.city,
         gender: data.gender
       }
-      const isUserCreated = await createUser(UserCreate);
+      const isUserCreated = await CreateUser(UserCreate);
       if (isUserCreated) {
         saveUser(UserCreate).then(()=> window.location.href = '/signIn')
         

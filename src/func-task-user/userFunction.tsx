@@ -1,15 +1,29 @@
-import { getDatabase, ref, get, set, push, update } from "firebase/database";
-import appFirebase from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
+import { appFirebase, auth } from "../firebaseConfig";
+import UserCreate  from "../interfaces/userCreate";
+import FormSignIn  from "../interfaces/formSignIn";
+import { push, ref, set, update, get, getDatabase } from "firebase/database";
 import User from "../interfaces/user";
-import UserCreate from "../interfaces/userCreate";
-import FormSignIn from "../interfaces/formSignIn";
 
 
-const auth = getAuth(appFirebase);
 
-const createUser = async(data: UserCreate)=> {
+interface UserCurrentFirebase {
+  user_ID: string,
+  user_email: string, 
+  accessToken: string
+}
+// interface SetUserDataAction {
+//   type: string;
+//   payload: UserCurrentFirebase;
+// }
+
+// Define action creator
+
+
+
+const CreateUser = async(data: UserCreate)=> {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.pass);
     if (userCredential) {
@@ -27,24 +41,46 @@ const createUser = async(data: UserCreate)=> {
   }
 };
 
-const getIdCurrentUser = () =>{
-  if (auth.currentUser !== null){
-    return auth.currentUser.uid;
-  }
-  //  else{
-  //   return ('No user sign in')
-  // }
+const getIdCurrentUser = ()=>{
+  auth.onAuthStateChanged((user)=>{
+    if (user !== null ){
+      return user.uid;
+    } else{
+      console.table('error getIdCurrentUser = ()')
+    }
+  })
 }
-const checkSignIn = (data : FormSignIn)=>{
+const GetDataUser = ()=>{
+  // const dispacth = useDispatch();
+  try{
+      auth.onAuthStateChanged( async(user)=>{
+        if (user !== null) {
+          // If user is signed in
+          const accessToken = await user.getIdToken(); // Get Firebase ID token
+          const userData: UserCurrentFirebase = {
+            user_ID: user.uid,
+            user_email: user.email || '',
+            accessToken: accessToken // Assign ID token to accessToken
+          };
+          // dispacth(setUserData(userData));
+          localStorage.setItem('user', JSON.stringify(userData)); // Store user data in localStorage
+          console.table(localStorage.getItem('user'));
+        } else {
+          console.log('User not signed in');
+        }
+      })
+    }
+    catch(error){
+      console.log('error: '+error)
+    }
+}
+const CheckSignIn =  (data : FormSignIn)=>{  
+
     signInWithEmailAndPassword(auth, data.email, data.password)
-    .then((userCredential) => {  
-      
-        // console.log(token);
-          // localStorage.removeItem('accessToken') !localStorage.getItem('accessToken') && 
-        // localStorage.setItem('uid', "123");
-        toast.success('You sign in successfully!'); 
-        window.location.href = '/board';
-      
+    .then( () => {
+        GetDataUser();
+        toast.success('Sign in successfully!')
+        window.location.href = '/board'
 
     })
     .catch((error) => {
@@ -53,18 +89,26 @@ const checkSignIn = (data : FormSignIn)=>{
       const errorMessage = error.message;
       console.log(errorCode);
       console.log(errorMessage);
-      window.location.href = '/signIn'
+      // window.location.href = '/signIn'
     });
- 
-  
 }
+const CheckSignOut = async ()=>{
+  try {
+    await auth.signOut(); // Sign out the user with Firebase
 
+    localStorage.removeItem('user'); // Remove user data from localStorage
+    console.log('User logged out successfully');
+    window.location.href='/signIn'
+  } catch (error) {
+    console.error('Error logging out:'+ error);
+  }
+}
 const saveUser = async (
   data: UserCreate
 ) => {
   try {
     const db = getDatabase(appFirebase);
-    toast.loading(`Adding  user ...`, { duration: 1500 });
+    toast.loading(`Adding  user ...`);
     const newDocRef = push(ref(db, "listToDo/users/")); 
     // const uid = newDocRef.key;
     const uid = getIdCurrentUser();
@@ -164,8 +208,10 @@ const getAllUser = async () => {
 
 export {
   getIdCurrentUser,
-  checkSignIn,
-  createUser ,
+  // getCurrentUserFirebase,
+  CheckSignIn,
+  CheckSignOut,
+  CreateUser ,
   saveUser,
   updateUser,
   getAllUser,

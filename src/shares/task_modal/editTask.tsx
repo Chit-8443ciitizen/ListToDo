@@ -10,7 +10,8 @@ const EditTask: FC<EditTaskProps> = ({
   task_name,
   task_deadline,
   task_priority,
-  time
+  time, 
+  task_uid
 }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   let [inputTaskNameEdit, setTaskNameEdit] = useState<string>("");

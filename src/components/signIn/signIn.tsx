@@ -1,30 +1,25 @@
-// import toast from "react-hot-toast";
-// import { checkLogin } from "../../functions/userFunction";
-import "./signIn.css";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { checkSignIn } from "../../func-task-user/userFunction";
+//import { useSelector } from "react-redux";
+import { CheckSignIn } from "../../func-task-user/userFunction";
 import FormSignIn from "../../interfaces/formSignIn";
+
 const signInImg =
   "https://cl-wpml.s3.ap-southeast-1.amazonaws.com/cam-nang-viec-lam/wp-content/uploads/2023/07/13105541/To-do-list-concept-illustration.jpg";
 
 const SignIn = () => {
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormSignIn>();
-  const onSubmit = async (data: FormSignIn)=>{
+
+
+  const onSubmit = async (data: FormSignIn) => {
     console.log(data);
-    // localStorage.removeItem('accessToken')
-    checkSignIn(data);
-    // const accessToken = localStorage.getItem('accessToken');console.log(accessToken);
-    // if(accessToken){
-    //   toast.success('You sign in successfully!');
-    //   // window.location.href = '/board';
-    // } else{
-    //   toast.error('You sign in failed!'); 
-    // }
-  }
+    CheckSignIn(data);
+  };
   return (
     <>
       <div className=" flex  bg-[#000114]">
@@ -54,7 +49,11 @@ const SignIn = () => {
           </button>
           <a className="text-white text-end hover:text-blue-400" href="signUp">
               Have account yet, to Sign up !
-            </a>
+          </a>
+
+       
+          
+        
         </form>
       
       </div>

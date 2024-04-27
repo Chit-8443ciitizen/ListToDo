@@ -1,8 +1,9 @@
 import { getDatabase, ref, get, set, push, update } from "firebase/database";
-import appFirebase from "../firebaseConfig";
+import {appFirebase} from "../firebaseConfig";
 import toast from "react-hot-toast";
 import Task from "../interfaces/task";
-// import { getIdCurrentUser } from "./userFunction";
+import { getIdCurrentUser } from "./userFunction";
+import UserCurrentFirebase from "../interfaces/UserCurrentFirebase";
 
 const createTask = async (
   name: string,
@@ -17,13 +18,22 @@ const createTask = async (
     toast.loading(`Adding  task ...`,{duration:1500});
     const newDocRef = push(ref(db, "listToDo/tasks/"));
     const newTaskID = newDocRef.key;
-    // const currentIdUser = getIdCurrentUser();
+    const userDataFromLocalStorage = localStorage.getItem('user');
+    let currentIdUser: UserCurrentFirebase | null = null;
+
+    if (userDataFromLocalStorage) {
+        try {
+            currentIdUser = JSON.parse(userDataFromLocalStorage);
+        } catch (error) {
+            console.error("Error parsing user data from localStorage:", error);
+        }
+    }
     set(newDocRef, {
       task_ID : newTaskID,
       task_name: name,
       task_deadline: time,
       task_priority: priority,
-      task_uid: "currentIdUser"
+      task_uid: currentIdUser?.user_ID
       // task_userID: user_ID
       // task_description: description,
     }) 
@@ -139,7 +149,7 @@ const doneTasks = async (listId: Array<string>) => {
 const getAllTask = async () => {
   try {
     const db = getDatabase(appFirebase);
-    const docRef = ref(db, "listToDo/tasks/");
+    const docRef = ref(db, `listToDo/tasks/`);
     const snapshot = await get(docRef);
     if (snapshot.exists()) {
       const data: Task[] = Object.values(snapshot.val());

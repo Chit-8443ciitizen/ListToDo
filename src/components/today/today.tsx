@@ -190,6 +190,7 @@ const Today = () => {
                     task_deadline={task.task_deadline}
                     task_priority={task.task_priority}
                     time = {{time: hourDayCurrent}}
+                    task_uid=""
                   />
                 </div>
               </div>

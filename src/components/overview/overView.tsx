@@ -5,7 +5,7 @@ import { getAllTask } from "../../func-task-user/taskFunction";
 import Task from "../../interfaces/task";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import { getIdCurrentUser } from "../../func-task-user/userFunction";
+
 
 const hourDayCurrent = moment().format('DD-MM-YYYY');
 
@@ -15,10 +15,8 @@ const OverView = () => {
   const [yet, setYet] = useState<number>(0);
   // const [isSignIn, setSignIn] = useState<string>('');
   // checkLogin() && setSignIn(true);
-  // const uid =  getIdCurrentUser();
-    // const getIdUser = async()=>{
-      const uid = getIdCurrentUser();
-      console.log(uid);
+
+      // console.log(uid);
     // }  
     // getIdUser();
   const getDataTasks = async ()=>{
